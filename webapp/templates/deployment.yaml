@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-v1
+  namespace: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      version: v1
+      app: frontend
+  template:
+    metadata:
+      labels:
+        version: v1
+        app: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx # mount nginx-conf volumn to /etc/nginx
+          readOnly: true
+          name: nginx-conf
+        - mountPath: /var/log/nginx
+          name: log
+        - mountPath: /www
+          name: www
+      volumes:
+      - name: www
+        configMap:
+          name: nginx-content-v1
+          items: 
+            - key: index.html
+              path: index.html
+      - name: nginx-conf
+        configMap:
+          name: nginx-conf
+          items:
+            - key: nginx.conf
+              path: nginx.conf
+      - name: log
+        emptyDir: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-v2
+  namespace: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      version: v2
+      app: frontend
+  template:
+    metadata:
+      labels:
+        version: v2
+        app: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx # mount nginx-conf volumn to /etc/nginx
+          readOnly: true
+          name: nginx-conf
+        - mountPath: /var/log/nginx
+          name: log
+        - mountPath: /www
+          name: www
+      volumes:
+      - name: www
+        configMap:
+          name: nginx-content-v2
+          items: 
+            - key: index.html
+              path: index.html
+      - name: nginx-conf
+        configMap:
+          name: nginx-conf
+          items:
+            - key: nginx.conf
+              path: nginx.conf
+      - name: log
+        emptyDir: {}
+
