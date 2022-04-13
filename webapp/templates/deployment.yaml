@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-v1
-  namespace: frontend
 spec:
   replicas: 3
   selector:
@@ -49,7 +48,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-v2
-  namespace: frontend
 spec:
   replicas: 3
   selector:
